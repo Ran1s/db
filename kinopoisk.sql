@@ -3,28 +3,28 @@ CREATE TYPE GENDER AS ENUM('male', 'female');
 
 CREATE TABLE film (
 	id SERIAL PRIMARY KEY,
-    name VARCHAR,
-    rating NUMERIC
+    name VARCHAR NOT NULL,
+    rating NUMERIC NOT NULL
 );
 
 CREATE TABLE recommendation (
 	id SERIAL PRIMARY KEY,
-    film1_id int REFERENCES film(id),
-    film2_id int REFERENCES film(id)
+    film1_id int REFERENCES film(id) ON DELETE CASCADE,
+    film2_id int REFERENCES film(id) ON DELETE CASCADE
 );
 
 CREATE TABLE trailer (
 	id SERIAL PRIMARY KEY,
-    video_link VARCHAR,
-    description VARCHAR,
-    film_id INT REFERENCES film(id)
+    video_link VARCHAR NOT NULL,
+    description VARCHAR NOT NULL,
+    film_id INT REFERENCES film(id) ON DELETE CASCADE
 );
 
 CREATE TABLE still (
 	id SERIAL PRIMARY KEY,
-    picture_link VARCHAR,
+    picture_link VARCHAR NOT NULL,
     description VARCHAR,
-    film_id INT REFERENCES film(id)
+    film_id INT REFERENCES film(id) ON DELETE CASCADE
 );
 
 CREATE TABLE person (
@@ -37,15 +37,15 @@ CREATE TABLE person (
 
 CREATE TABLE person_to_film (
 	id SERIAL PRIMARY KEY,
-    profession PROFESSION,
-    film_id INT REFERENCES film(id),
-    person_id INT REFERENCES person(id)
+    profession PROFESSION NOT NULL,
+    film_id INT REFERENCES film(id) ON DELETE CASCADE,
+    person_id INT REFERENCES person(id) ON DELETE CASCADE
 );
 
 CREATE TABLE site_user (
 	id SERIAL PRIMARY KEY,
-    login VARCHAR,
-    password VARCHAR,
+    login VARCHAR NOT NULL UNIQUE,
+    password VARCHAR NOT NULL,
     gender GENDER,
     birthday DATE
 );
@@ -54,24 +54,24 @@ CREATE TABLE review (
 	id SERIAL PRIMARY KEY,
     date_of_publication TIMESTAMP,
     rating NUMERIC,
-    film_id INT REFERENCES film(id),
+    film_id INT REFERENCES film(id) ON DELETE CASCADE,
     user_id INT REFERENCES site_user(id)
 );
 
 CREATE TABLE viewed_film (
 	id SERIAL PRIMARY KEY,
-    film_id INT REFERENCES film(id),
-    user_id INT REFERENCES site_user(id)
+    film_id INT REFERENCES film(id) ON DELETE CASCADE,
+    user_id INT REFERENCES site_user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE genre (
     id SERIAL PRIMARY KEY,
-    name VARCHAR,
+    name VARCHAR NOT NULL,
     description VARCHAR
 );
 
 CREATE TABLE genre_of_film (
     id SERIAL PRIMARY KEY,
-    genre_id INT REFERENCES genre(id),
-    film_id INT REFERENCES film(id)
+    genre_id INT REFERENCES genre(id) ON DELETE CASCADE,
+    film_id INT REFERENCES film(id) ON DELETE CASCADE
 );
